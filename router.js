@@ -1,7 +1,6 @@
-const cors = require('./util/cors');
 module.exports = (app) => {
     app.use((req, res, next) => {
-        cors(req, res);
+        // placeholder
         next();
     });
 
