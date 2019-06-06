@@ -1,14 +1,15 @@
 {
-  "name": "forums",
+  "name": "cirro",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Cirro is a lightweight, clean and free alternative to other forums.",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "MIT",
+  "author": "ThatTonybo <hello@thattonybo.com>",
+  "license": "GPL",
   "dependencies": {
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
