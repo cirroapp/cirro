@@ -1,7 +1,7 @@
 [![GitHub Issues](https://img.shields.io/github/issues/cirroapp/cirro.svg)](https://github.com/cirroapp/cirro/issues)
 [![Discord](https://discordapp.com/api/guilds/454409434676854786/embed.png?style=shield)](https://discord.gg/nnpPGRy)  
 
-<img align="right" width="128" height="128" src="https://i.imgur.com/H2Yl6KM.png">
+<img align="right" width="136" height="136" src="https://i.imgur.com/EvT6Mbi.png">
 
 # Cirro
 Discussion made simple. Cirro is a lightweight, clean and free alternative to forums such as xenForo and MyBB. It's open source, and will always stay 100% free to use for any use-case.
