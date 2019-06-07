@@ -8,12 +8,12 @@ module.exports = class Memory extends DatabaseProvider {
         this.persistent = false;
     }
 
-    async set(key, value) {
+    async set(key, value, table = null) {
         this.db.set(key, value);
         return value;
     }
 
-    async update(key, value) {
+    async update(key, value, table = null) {
         if (this.db.has(key)) {
             this.db.set(key, value);
             return value;
@@ -22,7 +22,7 @@ module.exports = class Memory extends DatabaseProvider {
         }
     }
 
-    async delete(key) {
+    async delete(key, table = null) {
         if (this.db.has(key)) {
             this.db.delete(key);
             return null;
@@ -31,7 +31,7 @@ module.exports = class Memory extends DatabaseProvider {
         }
     }
 
-    async get(key) {
+    async get(key, table = null) {
         if (this.db.has(key)) {
             return this.db.get(key);
         } else {
@@ -39,7 +39,7 @@ module.exports = class Memory extends DatabaseProvider {
         }
     }
 
-    async find(func = null) {
+    async find(func = null, table = null) {
         if (!func || typeof (func) != 'function') return false;
         
         const value = this.db.find(func);
