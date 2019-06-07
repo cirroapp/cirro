@@ -23,8 +23,7 @@ app.use(helmet());
 app.use(compression());
 app.use(cors());
 
-router(app);
-
 global.db = new Database(database);
+router(app);
 
 app.listen(port, console.log(`Started on port ${port}`));
