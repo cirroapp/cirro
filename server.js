@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { port, template, provider } = require('./config');
+const { port, template, provider, database } = require('./config');
 
 const router = require('./router');
 const Database = require(`./src/providers/${provider}`);
@@ -25,6 +25,6 @@ app.use(cors());
 
 router(app);
 
-global.db = new Database();
+global.db = new Database(database);
 
 app.listen(port, console.log(`Started on port ${port}`));
