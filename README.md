@@ -6,6 +6,11 @@
 # Cirro
 Discussion made simple. Cirro is a lightweight, clean and free alternative to forums such as xenForo and MyBB. It's open source, and will always stay 100% free to use for any use-case.
 
+## Features
+*This will be updated as development progresses.*  
+- Support for any kind of persistent or non-persistent database
+- Easy customization of design and themes
+
 ## Why make another?
 There's really no answer to this. Cirro is born from a couple of ideas being collected together to form a mockup a while ago, which lead to the idea of making forum sofware with no specific target audience, leaving it open for extension, customization and use in many different cases.  
 
