@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const cors = require('cors');
 const session = require('cookie-session');
+const randomstring = require('randomstring');
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.use(urlencoded({ extended: true }));
 app.use(helmet());
 app.use(compression());
 app.use(cors());
+app.use(session({
+    secret: randomstring.generate()
+}));
 
 global.db = new Database(database);
 router(app);

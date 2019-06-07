@@ -1,9 +1,10 @@
 module.exports = (app) => {
     app.use((req, res, next) => {
-        res.locals = {
-            title: 'Cirro'
-        }
+        res.locals.title = 'Cirro';
         
+        if (req.session.user) locals.user = req.session.user;
+        else locals.user = null;
+
         next();
     });
 
