@@ -1,7 +1,7 @@
 const express = require('express');
 const router = require('./router');
 
-const { port, style } = require('./config');
+const { port, template } = require('./config');
 
 const { json, urlencoded } = require('body-parser');
 const helmet = require('helmet');
