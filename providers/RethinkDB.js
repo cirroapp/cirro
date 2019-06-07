@@ -20,6 +20,18 @@ module.exports = class RethinkDB extends DatabaseProvider {
         return value;
     }
 
+    async has(key, table = null) {
+        if (!table) return false;
+
+        const item = await this.db.table(table).get(key);
+
+        if (item) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     async update(key, value, table = null) {
         if (!table) return false;
 

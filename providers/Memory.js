@@ -13,6 +13,14 @@ module.exports = class Memory extends DatabaseProvider {
         return value;
     }
 
+    async has(key, table = null) {
+        if (this.db.has(key)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     async update(key, value, table = null) {
         if (this.db.has(key)) {
             this.db.set(key, value);
