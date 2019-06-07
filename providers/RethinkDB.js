@@ -1,12 +1,12 @@
 const DatabaseProvider = require('../src/classes/DatabaseProvider');
 
 module.exports = class RethinkDB extends DatabaseProvider {
-    constructor(host, port, db) {
+    constructor(options) {
         super('RethinkDB');
 
         const r = require('rethinkdbdash');
 
-        this.db = r({ host, port, db });
+        this.db = r({ host: options.host, port: options.port, db: options.db });
         this.persistent = true;
     }
 
