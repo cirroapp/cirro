@@ -1,5 +1,6 @@
 {
     "port": 80,
     "template": "default",
-    "provider": ""
+    "provider": "",
+    "database": {}
 }
