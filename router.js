@@ -9,6 +9,7 @@ module.exports = (app) => {
     });
 
     app.use('/', require('./routes/index'));
+    app.use('/', require('./routes/accounts'));
 
     app.use((err, req, res, next) => {
         console.error(err.stack);
