@@ -2,8 +2,8 @@ module.exports = (app) => {
     app.use((req, res, next) => {
         res.locals.title = 'Cirro';
         
-        if (req.session.user) locals.user = req.session.user;
-        else locals.user = null;
+        if (req.session.user) res.locals.user = req.session.user;
+        else res.locals.user = null;
 
         next();
     });
