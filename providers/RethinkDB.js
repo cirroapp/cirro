@@ -1,4 +1,4 @@
-const DatabaseProvider = require('../src/classes/DatabaseProvider');
+const DatabaseProvider = require('../classes/DatabaseProvider');
 
 module.exports = class RethinkDB extends DatabaseProvider {
     constructor(options) {
