@@ -1,6 +1,9 @@
 module.exports = (app) => {
     app.use((req, res, next) => {
-        // placeholder
+        res.locals = {
+            title: 'Cirro'
+        }
+        
         next();
     });
 
