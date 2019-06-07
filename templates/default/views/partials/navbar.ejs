@@ -1,23 +1,28 @@
-<div class="container">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="/"><%- locals.title %></a>
+<div class="banner">
+    <div class="container banner-content">
+        <h1 class="title"><%- locals.title %></h1>
+    </div>
+    <div class="container">
+        <nav class="navbar is-dark is-transparent" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <!--<a class="navbar-item" href="/"><%- locals.title %></a>-->
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-        <div class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item">Navbar Link</a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
             </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="/">Forums</a>
+                </div>
 
-            <div class="navbar-end">
-                <a class="navbar-item" href="/login">Log in</a>
-                <a class="navbar-item" href="/register">Register</a>
+                <div class="navbar-end">
+                    <a class="navbar-item" href="/login">Log in</a>
+                    <a class="navbar-item" href="/register">Register</a>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
 </div>

@@ -1,0 +1,16 @@
+nav.navbar.is-dark.is-transparent {
+    background: transparent !important;
+}
+
+div.banner {
+    background: #393F49;
+}
+
+div.container.banner-content {
+    padding: 24px 0px;
+}
+
+div.container.banner-content h1.title {
+    color: #ffffff;
+    margin-top: 30px;
+}
