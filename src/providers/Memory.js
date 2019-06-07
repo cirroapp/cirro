@@ -4,7 +4,7 @@ module.exports = class Memory extends DatabaseProvider {
     constructor() {
         super('Memory');
 
-        this.db = new Map();
+        this.db = new Map(); // this is where you'd set the db/make it
         this.persistent = false;
     }
 
@@ -13,10 +13,19 @@ module.exports = class Memory extends DatabaseProvider {
         return value;
     }
 
+    async update(key, value) {
+        if (this.db.has(key)) {
+            this.db.set(key, value);
+            return value;
+        } else {
+            return null;
+        }
+    }
+
     async delete(key) {
         if (this.db.has(key)) {
             this.db.delete(key);
-            return true;
+            return null;
         } else {
             return false;
         }
