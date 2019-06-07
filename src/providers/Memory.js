@@ -2,7 +2,7 @@ const DatabaseProvider = require('../classes/DatabaseProvider');
 
 module.exports = class Memory extends DatabaseProvider {
     constructor() {
-        super('in-memory');
+        super('memory');
 
         this.db = new Map();
         this.persistent = false;
