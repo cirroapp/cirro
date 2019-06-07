@@ -1,7 +1,9 @@
 const express = require('express');
-const router = require('./router');
 
-const { port, template } = require('./config');
+const { port, template, provider } = require('./config');
+
+const router = require('./router');
+const Database = require(`./src/providers/${provider}`);
 
 const { json, urlencoded } = require('body-parser');
 const helmet = require('helmet');
@@ -22,5 +24,7 @@ app.use(compression());
 app.use(cors());
 
 router(app);
+
+global.db = new Database();
 
 app.listen(port, console.log(`Started on port ${port}`));
