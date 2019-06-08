@@ -6,9 +6,11 @@
 
     <script>
         function validate() {
-            if (!username.value) return alert('No username was provided.');
-            if (!password.value) return alert('No password was provided.');
-            if (!confirmpassword.value) return alert('The entered password wasn\'t confirmed.');
+            if (!username.value) return toast(`No username was entered.`, 'danger');
+            if (!password.value) return toast(`No password was entered.`, 'danger');
+            if (password.value.length < 8) return toast(`Your password must be at least 8 characters.`, 'danger');
+            if (!confirmpassword.value) return toast(`The entered password must be confirmed.`, 'danger');
+            if (password.value !== confirmpassword.value) return toast(`The entered passwords do not match.`, 'danger');
         }
     </script>
 
