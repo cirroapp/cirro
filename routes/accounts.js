@@ -4,6 +4,15 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const randomstring = require('randomstring');
 
+router.get('/@:username', async (req, res) => {
+    const username = req.params.username;
+
+    const user = await db.find(((d) => d.username == username), 'users');
+    if (!user) return;
+
+    return res.render('accounts/profile');
+});
+
 router.route('/login')
 .get(async (req, res) => {
     return res.render('accounts/log-in');
