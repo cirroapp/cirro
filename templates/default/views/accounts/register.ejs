@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<%- include('../partials/head.ejs'); %>
+<body>
+    <%- include('../partials/navbar.ejs'); %>
+
+    <div class="container">
+        <h1 class="title">Register</h1>
+
+        <form method="POST" autocomplete="off">
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    <input class="input" type="text" name="username" id="username" autocomplete="off" />
+                </div>
+                <p class="help">Your username is the unique name you'll be known by across the forums.</p>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Password</label>
+                        <div class="control">
+                            <input class="input" type="password" name="password" id="password" autocomplete="off" min="8" />
+                        </div>
+                        <p class="help">Passwords must be at least 8 characters, and must be unique.</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Confirm Password</label>
+                        <div class="control">
+                            <input class="input" type="password" name="confirmpassword" id="confirmpassword" autocomplete="off" min="8" />
+                        </div>
+                        <p class="help">Confirm the password you entered before.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control">
+                <button class="button is-link">Register</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
