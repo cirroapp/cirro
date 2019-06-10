@@ -4,6 +4,12 @@ module.exports = class Memory extends DatabaseProvider {
     constructor() {
         super('Memory');
 
+        // delete all comments
+        
+        // 'table = null' means that if you need to define a table
+        // in your request, it's there, otherwise it doesn't have
+        // to be used
+
         this.db = new Map(); // this is where you'd set the db/make it
         this.persistent = false;
     }
