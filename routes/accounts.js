@@ -15,7 +15,7 @@ router.get('/@:username', async (req, res) => {
 
 router.route('/login')
 .get(async (req, res) => {
-    return res.render('accounts/log-in');
+    return res.render('accounts/login');
 })
 .post(async (req, res) => {
     
