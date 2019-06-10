@@ -22,7 +22,7 @@ Cirro is in early development, and currently has no public releases available.
 However, if you would like to run it during development, fork this repository, install the dependencies, and run `npm start` to start a local instance on port 80 (configurable). Cirro depends on a recent version of node.js, and git being installed.
 
 ## Credits
-Cirro is built with [express](https://expressjs.com), [ejs](http://ejs.co), [Bulma](https://bulma.io) and a bunch of other packages & modules found [here](https://github.com/cirroapp/cirro/blob/master/package.json#L13). Icons are provided by [Feather Icons](https://feathericons.com/).
+Cirro is built with [express](https://expressjs.com), [ejs](http://ejs.co), [Bulma](https://bulma.io) and a bunch of other packages & modules found [here](https://github.com/cirroapp/cirro/blob/master/package.json#L13). Icons are provided by [Font Awesome](https://fontawesome.com/).
 
 ## Licence
 (c) 2019 ThatTonybo. Licenced under the GNU GPL-3.0 Licence, see the LICENCE file for more information.
