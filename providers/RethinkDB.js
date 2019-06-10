@@ -33,7 +33,6 @@ module.exports = class RethinkDB extends DatabaseProvider {
     }
 
     async count(table = null) {
-        if (!func || typeof (func) != 'function') return false;
         if (!table) return false;
 
         const items = await this.db.table(table);
