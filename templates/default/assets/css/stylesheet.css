@@ -1,3 +1,15 @@
-.profile {
+div.profile {
     padding: 24px 0px;
+}
+
+img.avatar {
+    width: 64px;
+    height: auto;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 18px;
+}
+
+.column.avatar {
+    width: 64px !important;
 }

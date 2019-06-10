@@ -6,14 +6,22 @@
 
     <div class="profile has-background-grey-lighter">
         <div class="container">
-            <h1 class="title"><%= user.username %></h1>
+            <div class="columns">
+                <div class="column is-1">
+                    <img class="avatar" src="<%= !user.avatar ? '/img/defaultAvatar.png' : user.avatar %>" alt="Avatar" />
+                </div>
+                <div class="column">
+                    <h1 class="title"><%= user.username %></h1>
+                    <p class="subtitle is-6">Joined in <%= months[new Date(user.createdAt).getMonth()] %></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <br />
 
     <div class="container">
-        
+
     </div>
 </body>
 </html>
