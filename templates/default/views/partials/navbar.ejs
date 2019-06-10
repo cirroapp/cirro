@@ -17,8 +17,13 @@
             </div>
 
             <div class="navbar-end">
-                <a class="navbar-item" href="/login">Log in</a>
+                <% if (!locals.user) { %>
+                <a class="navbar-item" href="/login">Login</a>
                 <a class="navbar-item" href="/register">Register</a>
+                <% } else { %>
+                <a class="navbar-item" href="/@<%= locals.user.username %>"><%= locals.user.username %></a>
+                <a class="navbar-item" href="/logout">Logout</a>
+                <% } %>
             </div>
         </div>
     </nav>

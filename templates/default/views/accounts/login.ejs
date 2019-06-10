@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<%- include('../partials/head.ejs'); %>
+<body>
+    <%- include('../partials/navbar.ejs'); %>
+
+    <script>
+        function validate() {
+            if (!username.value) return toast(`No username was entered.`, 'danger');
+            if (!password.value) return toast(`No password was entered.`, 'danger');
+        }
+    </script>
+    <% if (err != null) { %>
+    <script>
+        setTimeout(() => {
+            toast(`<%- err %>`, 'danger');
+        }, 1000);
+    </script>
+    <% } %>
+
+    <div class="container">
+        <h1 class="title">Login</h1>
+
+        <form id="register" onsubmit="return validate()" method="POST" autocomplete="off">
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    <input class="input" type="text" name="username" id="username" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                    <input class="input" type="password" name="password" id="password" autocomplete="off" min="8" />
+                </div>
+            </div>
+
+            <div class="control">
+                <button class="button is-link">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
