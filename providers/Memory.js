@@ -27,6 +27,14 @@ module.exports = class Memory extends DatabaseProvider {
         }
     }
 
+    async count(table = null) {
+        // in-memory doesn't support this so we have to send 0,
+        // but this means every user made will be an admin
+        
+        // i hope you will use a real database, not in-memory
+        return 0;
+    }
+
     async update(key, value, table = null) {
         if (this.db.has(key)) {
             this.db.set(key, value);
