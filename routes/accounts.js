@@ -49,17 +49,16 @@ router.route('/register')
     return res.render('accounts/register');
 })
 .post(async (req, res) => {
-    const { username, password, confirmpassword } = req.body;
+    const { username, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const id = randomstring.generate({
-        length: 7,
-        charset: 'numeric'
-    });
+    const id = randomstring.generate(12);
 
     const data = {
         username,
-        password: hashedPassword
+        password: hashedPassword,
+        createdAt: Date.now(),
+        avatar: null
     }
 
     await db.set(id, data, 'users');
