@@ -53,6 +53,8 @@ router.route('/register')
 .post(async (req, res) => {
     const { username, password } = req.body;
 
+    const existingUsers = await db.count('users');
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const id = randomstring.generate(12);
 
@@ -60,7 +62,8 @@ router.route('/register')
         username,
         password: hashedPassword,
         createdAt: Date.now(),
-        avatar: null
+        avatar: null,
+        admin: existingUsers == 0 ? true : false
     }
 
     await db.set(id, data, 'users');
