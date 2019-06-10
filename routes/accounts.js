@@ -4,20 +4,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const randomstring = require('randomstring');
 
-const months = {
-    0: 'January',
-    1: 'February',
-    2: 'March',
-    3: 'April',
-    4: 'May',
-    5: 'June',
-    6: 'July',
-    7: 'August',
-    8: 'September',
-    9: 'October',
-    10: 'November',
-    11: 'December'
-}
+const { months } = require('../src/constants');
 
 router.get('/@:username', async (req, res) => {
     const username = req.params.username;
