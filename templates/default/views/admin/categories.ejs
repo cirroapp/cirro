@@ -19,10 +19,14 @@
                 <%- include('../partials/adminMenu.ejs'); %>
             </div>
             <div class="column">
-                <h1 class="title">Categories</h1>
+                <h1 class="title">Categories <a class="button is-info is-pulled-right"><i class="fas fa-plus"></i></a></h1>
                 <p class="subtitle is-6">Manage the categories and sub-categories on your forum</p>
 
-                
+                <% if (!categories.length) { %>
+                    <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
+                <% } else { %>
+
+                <% } %>
             </div>
         </div>
     </div>

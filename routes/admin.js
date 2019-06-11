@@ -15,8 +15,9 @@ router.get('/', checkAdmin, async (req, res) => {
 });
 
 router.get('/categories', checkAdmin, async (req, res) => {
-    const categories = await global.db
-    return res.render('admin/index', {});
+    const categories = await db.all('categories');
+
+    return res.render('admin/categories', { categories });
 });
 
 module.exports = router;
