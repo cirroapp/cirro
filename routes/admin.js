@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const randomstring = require('randomstring');
+
 const { version } = require('../package.json');
 
 const checkAdmin = (req, res, next) => {
@@ -27,14 +29,16 @@ router.post('/categories/new', checkAdmin, async (req, res) => {
 
     if (type == 'category') {
         const { title: name } = req.body;
+
         const position = (categories || 0) + 1;
+        const id = randomstring.generate(12);
 
         const data = {
             name,
             position
         }
 
-        await db.set(position, data, 'categories');
+        await db.set(id, data, 'categories');
 
         return res.status(201).redirect('/admin/categories');
     } else if (type == 'subcategory') {
@@ -47,15 +51,13 @@ router.post('/categories/new', checkAdmin, async (req, res) => {
 router.post('/categories/up', checkAdmin, async (req, res) => {
     const { id } = req.body;
 
-    const categories = await db.count('categories');
+    const categories = await db.all('categories');
 
-    if (id >= categories) return res.redirect('/admin/categories');
+    const updatedCategory = await categories.find(category => category.position === parseInt(id), 'categories');
+    const otherCategory = await categories.find(category => category.position === parseInt(id) + 1, 'categories');
 
-    const updated = {
-        position: id + 1
-    }
-
-    await db.update(id, updated, 'categories');
+    await db.update(updatedCategory.id, { position: parseInt(id) + 1 }, 'categories');
+    await db.update(otherCategory.id, { position: parseInt(id) }, 'categories');
 
     return res.redirect('/admin/categories');
 });
@@ -63,15 +65,13 @@ router.post('/categories/up', checkAdmin, async (req, res) => {
 router.post('/categories/down', checkAdmin, async (req, res) => {
     const { id } = req.body;
 
-    const categories = await db.count('categories');
+    const categories = await db.all('categories');
 
-    if (id <= 1) return res.redirect('/admin/categories');
+    const updatedCategory = await categories.find(category => category.position === parseInt(id), 'categories');
+    const otherCategory = await categories.find(category => category.position === parseInt(id) - 1, 'categories');
 
-    const updated = {
-        position: id - 1
-    }
-
-    await db.update(id, updated, 'categories');
+    await db.update(updatedCategory.id, { position: parseInt(id) - 1 }, 'categories');
+    await db.update(otherCategory.id, { position: parseInt(id) }, 'categories');
 
     return res.redirect('/admin/categories');
 });

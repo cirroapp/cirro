@@ -34,7 +34,7 @@
                 <% if (!categories.length) { %>
                     <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
                 <% } else { %>
-                    <% categories.sort((a, b) => parseFloat(b.position) - parseFloat(a.position)).forEach(category => { %>
+                    <% categories.sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
                         <article class="message is-info">
                             <div class="message-header">
                                 <p><%= category.name %></p>
