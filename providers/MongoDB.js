@@ -50,6 +50,10 @@ module.exports = class MongoDB extends DatabaseProvider {
 
         return items.length;
     }
+    
+    async all(table = null) {
+        return table ? false : await this.db.collection(table).toArray();
+    }
 
     async update(key, value, table = null) {
         if (!table) return false;
