@@ -35,6 +35,13 @@ module.exports = class Memory extends DatabaseProvider {
         return 0;
     }
 
+    async all(table = null) {
+        // painful but it works i guess
+        const items = this.db.array();
+
+        return items;
+    }
+
     async update(key, value, table = null) {
         if (this.db.has(key)) {
             this.db.set(key, value);
