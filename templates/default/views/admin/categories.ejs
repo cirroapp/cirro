@@ -34,15 +34,17 @@
                 <% if (!categories.length) { %>
                     <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
                 <% } else { %>
-                    <article class="message is-info">
-                        <div class="message-header">
-                            <p>Info</p>
-                            <button class="button is-info" aria-label="new"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <div class="message-body">
-                            <p>Sub-categories will appear here.</p>
-                        </div>
-                    </article>
+                    <% categories.forEach(category => { %>
+                        <article class="message is-info">
+                            <div class="message-header">
+                                <p><%= category.name %></p>
+                                <button class="button is-info" aria-label="new"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="message-body">
+                                <p>Sub-categories will appear here.</p>
+                            </div>
+                        </article>
+                    <% }); %>
                 <% } %>
             </div>
         </div>
