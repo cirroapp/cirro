@@ -7,4 +7,14 @@ function formatTime(ms) {
 
     return `${Math.round(days)}d ${Math.round(hours)}h ${Math.round(minutes)}m ${Math.round(seconds)}s`;
 }
+
+function openModal(id) {
+    $(`#modal-${id}`).addClass('is-active');
+    $(`html`).addClass('is-clipped');
+}
+
+function closeModal(id) {
+    $(`#modal-${id}`).removeClass('is-active');
+    $(`html`).removeClass('is-clipped');
+}
 </script>
