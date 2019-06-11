@@ -34,11 +34,15 @@
                 <% if (!categories.length) { %>
                     <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
                 <% } else { %>
-                    <% categories.forEach(category => { %>
+                    <% categories.sort((a, b) => parseFloat(b.position) - parseFloat(a.position)).forEach(category => { %>
                         <article class="message is-info">
                             <div class="message-header">
                                 <p><%= category.name %></p>
-                                <button class="button is-info" aria-label="new"><i class="fas fa-plus"></i></button>
+                                <div class="is-pulled-right">
+                                    <button class="button is-info" aria-label="new"><i class="fas fa-plus"></i></button>
+                                    <% if (category.position < categories.length) { %><button class="button is-info" aria-label="up" onclick="post('/admin/categories/up', { id: `<%= category.position %>` });"><i class="fas fa-arrow-up"></i></button><% } %>
+                                    <% if (category.position > 1) { %><button class="button is-info" aria-label="down" onclick="post('/admin/categories/down', { id: `<%= category.position %>` });"><i class="fas fa-arrow-down"></i></button><% } %>
+                                </div>
                             </div>
                             <div class="message-body">
                                 <p>Sub-categories will appear here.</p>

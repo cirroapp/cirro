@@ -26,7 +26,7 @@ router.post('/categories/new', checkAdmin, async (req, res) => {
     const categories = await db.count('categories');
 
     if (type == 'category') {
-        const { name } = req.body;
+        const { title: name } = req.body;
         const position = (categories || 0) + 1;
 
         const data = {
@@ -42,6 +42,38 @@ router.post('/categories/new', checkAdmin, async (req, res) => {
     } else {
         return res.status(500).render('errors/500', { stack: `dumbass` });
     }
+});
+
+router.post('/categories/up', checkAdmin, async (req, res) => {
+    const { id } = req.body;
+
+    const categories = await db.count('categories');
+
+    if (id >= categories) return res.redirect('/admin/categories');
+
+    const updated = {
+        position: id + 1
+    }
+
+    await db.update(id, updated, 'categories');
+
+    return res.redirect('/admin/categories');
+});
+
+router.post('/categories/down', checkAdmin, async (req, res) => {
+    const { id } = req.body;
+
+    const categories = await db.count('categories');
+
+    if (id <= 1) return res.redirect('/admin/categories');
+
+    const updated = {
+        position: id - 1
+    }
+
+    await db.update(id, updated, 'categories');
+
+    return res.redirect('/admin/categories');
 });
 
 module.exports = router;
