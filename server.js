@@ -28,6 +28,8 @@ app.use(session({
 }));
 
 global.db = new Database(database);
+global.startDate = Date.now();
+
 router(app);
 
 app.listen(port, console.log(`Started on port ${port}`));

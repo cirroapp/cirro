@@ -20,9 +20,58 @@
             </div>
             <div class="column">
                 <h1 class="title">Overview</h1>
+                <p class="subtitle is-6">Your forum is running on Cirro <%= version %></p>
+
+                <div class="columns">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-3" id="uptime"></h1>
+                                    <p class="subtitle is-6">Uptime</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-3">0s</h1>
+                                    <p class="subtitle is-6">Uptime</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="content">
+                                    <h1 class="title is-3">0s</h1>
+                                    <p class="subtitle is-6">Uptime</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+    const start = parseInt(`<%= startDate %>`);
+    
+    function updateUptime() {
+        let now = Date.now();
+        let time = now - start;
+
+        $('#uptime').text = time;
+    }
+
+    updateUptime();
+
+    setInterval(() => updateUptime(), 1000);
+    </script>
 
     <%- include('../partials/scripts.ejs'); %>
 </body>
