@@ -20,11 +20,7 @@ module.exports = class Memory extends DatabaseProvider {
     }
 
     async has(key, table = null) {
-        if (this.db.has(key)) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.db.has(key);
     }
 
     async count(table = null) {
@@ -72,4 +68,4 @@ module.exports = class Memory extends DatabaseProvider {
             return null;
         }
     }
-}
+};

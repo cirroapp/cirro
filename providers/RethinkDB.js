@@ -11,84 +11,35 @@ module.exports = class RethinkDB extends DatabaseProvider {
     }
 
     async set(key, value, table = null) {
-        if (!table) return false;
-
-        const data = value;
-        data.id = key;
-
-        await this.db.table(table).insert(data);
-        return value;
+        return !table ? false : await this.db.table(table).insert({ id: key, ...value }).then(() => value);
     }
 
     async has(key, table = null) {
-        if (!table) return false;
-
-        const item = await this.db.table(table).get(key);
-
-        if (item) {
-            return true;
-        } else {
-            return false;
-        }
+        return !table ? false : !!(await this.db.table(table).get(key));
     }
 
     async count(table = null) {
-        if (!table) return false;
-
-        const items = await this.db.table(table);
-
-        return items.length;
+        return !table ? false : (await this.db.table(table)).length;
     }
 
     async update(key, value, table = null) {
         if (!table) return false;
-
         const item = await this.db.table(table).get(key);
-
-        if (item) {
-            await this.db.table(table).get(key).update(value);
-            return value;
-        } else {
-            return null;
-        }
+        return !item ? null : await this.db.table(table).get(key).update(value).then(() => value);
     }
 
     async delete(key, table = null) {
         if (!table) return false;
-
         const item = await this.db.table(table).get(key);
-
-        if (item) {
-            await this.db.table(table).get(key).update(value);
-            return null;
-        } else {
-            return false;
-        }
+        return !item ? null : await this.db.table(table).get(key).delete().then(() => true);
     }
 
     async get(key, table = null) {
-        if (!table) return false;
-
-        const item = await this.db.table(table).get(key);
-
-        if (item) {
-            return item;
-        } else {
-            return null;
-        }
+        return !table ? false : await this.db.table(table).get(key);
     }
 
     async find(func = null, table = null) {
-        if (!func || typeof (func) != 'function') return false;
-        if (!table) return false;
-
-        const items = await this.db.table(table);
-        const value = items.find(func);
-
-        if (value) {
-            return value;
-        } else {
-            return null;
-        }
+        return (!func || typeof func !== "function" || !table) ? false : (await this.db.table(table)).find(func);
     }
-}
+
+};
