@@ -4,29 +4,37 @@ module.exports = class MongoDB extends DatabaseProvider {
     constructor(options) {
         super('MongoDB');
 
-        const MongoClient = require('mongodb').MongoClient;
+        const { MongoClient } = require('mongodb');
+
         this.db = null;
-        MongoClient.connect(options.url, { useNewUrlParser: true }, (error, client) => {
-            if (error) throw error;
-            this.db = client.db(options.db);
-        });
         this.persistent = true;
+
+        MongoClient.connect(options.url, {
+            useNewUrlParser: true
+        }, (error, client) => {
+            if (error) {
+                throw error;
+            }  else {
+                this.db = client.db(options.db);
+            }
+        });
+
     }
 
-    async set(key, value, collection = null) {
-        if (!collection) return false;
+    async set(key, value, table = null) {
+        if (!table) return false;
 
         const data = value;
         data._id = key;
 
-        await this.db.collection(collection).insertOne(data);
+        await this.db.collection(table).insertOne(data);
         return value;
     }
 
-    async has(key, collection = null) {
-        if (!collection) return false;
+    async has(key, table = null) {
+        if (!table) return false;
 
-        const item = await this.db.collection(collection).findOne({ _id: key });
+        const item = await this.db.collection(table).findOne({ _id: key });
 
         if (item) {
             return true;
@@ -35,44 +43,44 @@ module.exports = class MongoDB extends DatabaseProvider {
         }
     }
 
-    async count(collection = null) {
-        if (!collection) return false;
+    async count(table = null) {
+        if (!table) return false;
 
-        const items = await this.db.collection(collection);
+        const items = await this.db.collection(table);
 
         return items.length;
     }
 
-    async update(key, value, collection = null) {
-        if (!collection) return false;
+    async update(key, value, table = null) {
+        if (!table) return false;
 
-        const item = await this.db.collection(collection).findOne({ _id: key });
+        const item = await this.db.collection(table).findOne({ _id: key });
 
         if (item) {
-            await this.db.collection(collection).updateOne({ _id: key }, { $set: value });
+            await this.db.collection(table).updateOne({ _id: key }, { $set: value });
             return value;
         } else {
             return null;
         }
     }
 
-    async delete(key, collection = null) {
-        if (!collection) return false;
+    async delete(key, table = null) {
+        if (!table) return false;
 
-        const item = await this.db.collection(collection).findOne({ _id: key })
+        const item = await this.db.collection(table).findOne({ _id: key });
 
         if (item) {
-            await this.db.collection(collection).remove({ _id: key });
+            await this.db.collection(table).remove({ _id: key });
             return null;
         } else {
             return false;
         }
     }
 
-    async get(key, collection = null) {
-        if (!collection) return false;
+    async get(key, table = null) {
+        if (!table) return false;
 
-        const item = await this.db.collection(collection).findOne({ _id: key });
+        const item = await this.db.collection(table).findOne({ _id: key });
 
         if (item) {
             return item;
@@ -81,11 +89,11 @@ module.exports = class MongoDB extends DatabaseProvider {
         }
     }
 
-    async find(func = null, collection = null) {
+    async find(func = null, table = null) {
         if (!func || typeof (func) != 'function') return false;
-        if (!collection) return false;
+        if (!table) return false;
 
-        const items = await this.db.collection(collection).find({}).toArray();
+        const items = await this.db.collection(table).find({}).toArray();
         const value = items.find(func);
 
         if (value) {
