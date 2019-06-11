@@ -19,16 +19,45 @@
                 <%- include('../partials/adminMenu.ejs'); %>
             </div>
             <div class="column">
-                <h1 class="title">Categories <a class="button is-info is-pulled-right"><i class="fas fa-plus"></i></a></h1>
+                <h1 class="title">Categories <a class="button is-info is-pulled-right" onclick="openModal('createCategory');"><i class="fas fa-plus"></i></a></h1>
                 <p class="subtitle is-6">Manage the categories and sub-categories on your forum</p>
 
                 <% if (!categories.length) { %>
                     <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
                 <% } else { %>
-
+                    <article class="message is-info">
+                        <div class="message-header">
+                            <p>Info</p>
+                            <button class="is-info" aria-label="new"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="message-body">
+                            <p>Sub-categories will appear here.</p>
+                        </div>
+                    </article>
                 <% } %>
             </div>
         </div>
+    </div>
+
+    <div class="modal modal-fx-slideTop" id="modal-createCategory">
+        <div class="modal-background" onclick="closeModal('createCategory');"></div>
+        <div class="modal-content">
+            <div class="box">
+                <form method="POST" action="/admin/categories/new">
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" id="name" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <button class="button is-info">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" onclick="closeModal('createCategory');"></button>
     </div>
 
     <%- include('../partials/scripts.ejs'); %>
