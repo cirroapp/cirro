@@ -75,4 +75,4 @@ module.exports = class Memory extends DatabaseProvider {
             return null;
         }
     }
-};
+}

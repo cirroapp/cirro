@@ -50,7 +50,7 @@ module.exports = class MongoDB extends DatabaseProvider {
     }
 
     async find(func = null, table = null) {
-        return (!func || typeof func !== "function" || !table) ? false : (await this.db.collection(table).find({}).toArray()).find(func);
+        return (!func || typeof func != 'function' || !table) ? false : (await this.db.collection(table).find({}).toArray()).find(func);
     }
 
-};
+}

@@ -47,7 +47,7 @@ module.exports = class RethinkDB extends DatabaseProvider {
     }
 
     async find(func = null, table = null) {
-        return (!func || typeof func !== "function" || !table) ? false : (await this.db.table(table)).find(func);
+        return (!func || typeof func != 'function' || !table) ? false : (await this.db.table(table)).find(func);
     }
 
-};
+}
