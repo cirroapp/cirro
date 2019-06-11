@@ -63,8 +63,8 @@ router.route('/register')
         password: hashedPassword,
         createdAt: Date.now(),
         avatar: null,
-        admin: existingUsers == 0 ? true : false
-    }
+        admin: existingUsers === 0
+    };
 
     await db.set(id, data, 'users');
     req.session.user = data;

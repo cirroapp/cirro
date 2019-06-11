@@ -12,94 +12,45 @@ module.exports = class MongoDB extends DatabaseProvider {
         MongoClient.connect(options.url, {
             useNewUrlParser: true
         }, (error, client) => {
-            if (error) {
-                throw error;
-            }  else {
-                this.db = client.db(options.db);
-            }
+            if (error) throw error;
+            this.db = client.db(options.db);
         });
 
     }
 
     async set(key, value, table = null) {
-        if (!table) return false;
-
-        const data = value;
-        data._id = key;
-
-        await this.db.collection(table).insertOne(data);
-        return value;
+        return (!key || !value || !table) ? false : await this.db.collection(table).insertOne(data).then(() => value);
     }
 
     async has(key, table = null) {
-        if (!table) return false;
-
-        const item = await this.db.collection(table).findOne({ _id: key });
-
-        if (item) {
-            return true;
-        } else {
-            return false;
-        }
+        return (!key || !table) ? false : !!(await this.db.collection(table).findOne({ _id: key }));
     }
 
     async count(table = null) {
-        if (!table) return false;
-
-        const items = await this.db.collection(table);
-
-        return items.length;
+        return !table ? false : (await this.db.collection(table).toArray()).length;
+    }
+    
+    async all(table = null) {
+        return !table ? false : await this.db.collection(table).toArray();
     }
 
     async update(key, value, table = null) {
         if (!table) return false;
-
         const item = await this.db.collection(table).findOne({ _id: key });
-
-        if (item) {
-            await this.db.collection(table).updateOne({ _id: key }, { $set: value });
-            return value;
-        } else {
-            return null;
-        }
+        return !item ? false : await this.db.collection(table).updateOne({ _id: key }, { $set: value });
     }
 
     async delete(key, table = null) {
         if (!table) return false;
-
-        const item = await this.db.collection(table).findOne({ _id: key });
-
-        if (item) {
-            await this.db.collection(table).remove({ _id: key });
-            return null;
-        } else {
-            return false;
-        }
+        return (await this.db.collection(table).remove({ _id: key })).result.nRemoved >= 1;
     }
 
     async get(key, table = null) {
-        if (!table) return false;
-
-        const item = await this.db.collection(table).findOne({ _id: key });
-
-        if (item) {
-            return item;
-        } else {
-            return null;
-        }
+        return !table ? false : await this.db.collection(table).findOne({ _id: key });
     }
 
     async find(func = null, table = null) {
-        if (!func || typeof (func) != 'function') return false;
-        if (!table) return false;
-
-        const items = await this.db.collection(table).find({}).toArray();
-        const value = items.find(func);
-
-        if (value) {
-            return value;
-        } else {
-            return null;
-        }
+        return (!func || typeof func !== "function" || !table) ? false : (await this.db.collection(table).find({}).toArray()).find(func);
     }
-}
+
+};
