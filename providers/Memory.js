@@ -28,44 +28,22 @@ module.exports = class Memory extends DatabaseProvider {
         // but this means every user made will be an admin
         
         // i hope you will use a real database, not in-memory
-        return 0;
+        return this.db.size; // Count of ALL "tables"
     }
 
     async update(key, value, table = null) {
-        if (this.db.has(key)) {
-            this.db.set(key, value);
-            return value;
-        } else {
-            return null;
-        }
+        return this.db.has(key) ? (() => { this.db.set(key, value); return value; })() : null;
     }
 
     async delete(key, table = null) {
-        if (this.db.has(key)) {
-            this.db.delete(key);
-            return null;
-        } else {
-            return false;
-        }
+        return this.db.delete(key);
     }
 
     async get(key, table = null) {
-        if (this.db.has(key)) {
-            return this.db.get(key);
-        } else {
-            return null;
-        }
+        return this.db.get(key);
     }
 
     async find(func = null, table = null) {
-        if (!func || typeof (func) != 'function') return false;
-        
-        const value = this.db.find(func);
-
-        if (value) {
-            return value;
-        } else {
-            return null;
-        }
+        return (!func || typeof (func) != 'function') ? false : this.db.find(func);
     }
 };
