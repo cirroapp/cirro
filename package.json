@@ -1,6 +1,6 @@
 {
   "name": "cirro",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Cirro is a lightweight, clean and free alternative to other forums.",
   "main": "server.js",
   "scripts": {

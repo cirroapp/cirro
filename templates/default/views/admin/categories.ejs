@@ -39,15 +39,38 @@
                             <div class="message-header">
                                 <p><%= category.name %></p>
                                 <div class="is-pulled-right">
-                                    <button class="button is-info" aria-label="new"><i class="fas fa-plus"></i></button>
                                     <% if (category.position < categories.length) { %><button class="button is-info" aria-label="up" onclick="post('/admin/categories/up', { id: `<%= category.position %>` });"><i class="fas fa-arrow-up"></i></button><% } %>
                                     <% if (category.position > 1) { %><button class="button is-info" aria-label="down" onclick="post('/admin/categories/down', { id: `<%= category.position %>` });"><i class="fas fa-arrow-down"></i></button><% } %>
+                                    <button class="button is-info" aria-label="new"><i class="fas fa-plus" onclick="openModal('createSubCategory__<%= category.id %>');"></i></button>
+                                    <button class="button is-info" aria-label="delete" onclick="post('/admin/categories/delete', { id: `<%= category.id %>` });"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
                             <div class="message-body">
                                 <p>Sub-categories will appear here.</p>
                             </div>
                         </article>
+
+                        <div class="modal modal-fx-slideTop" id="modal-createSubCategory_<%= category.id %>">
+                            <div class="modal-background" onclick="closeModal('createSubCategory_<%= category.id %>');"></div>
+                            <div class="modal-content">
+                                <div class="box">
+                                    <form method="POST" onsubmit="return validateSubCategory()" action="/admin/categories/new">
+                                        <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="title" id="title" autocomplete="off" />
+                            <input class="input" type="text" name="type" id="type" autocomplete="off" style="display: none !important;" value="category" />
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <button class="button is-info">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" onclick="closeModal('createCategory');"></button>
+    </div>
                     <% }); %>
                 <% } %>
             </div>
