@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<%- include('../partials/head.ejs'); %>
+<body>
+    <%- include('../partials/navbar.ejs'); %>
+
+    <div class="header has-background-grey-lighter">
+        <div class="container">
+            <h1 class="title"><%= locals.title %></h1>
+            <p class="subtitle is-6">Manage your forum's content and settings</p>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="container">
+        <div class="columns">
+            <div class="column is-2">
+                <%- include('../partials/adminMenu.ejs'); %>
+            </div>
+            <div class="column">
+                <h1 class="title">Categories</h1>
+                <p class="subtitle is-6">Manage the categories and sub-categories on your forum</p>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/scripts.ejs'); %>
+</body>
+</html>
