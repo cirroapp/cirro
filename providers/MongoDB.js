@@ -52,7 +52,7 @@ module.exports = class MongoDB extends DatabaseProvider {
     }
     
     async all(table = null) {
-        return table ? false : await this.db.collection(table).toArray();
+        return !table ? false : await this.db.collection(table).toArray();
     }
 
     async update(key, value, table = null) {
