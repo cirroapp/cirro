@@ -12,6 +12,7 @@ module.exports = (app) => {
     app.use('/', require('./routes/accounts'));
     
     app.use('/admin', require('./routes/admin'));
+    app.use('/admin/categories', require('./routes/admin/categories'));
 
     app.use((err, req, res, next) => {
         console.error(err.stack);
