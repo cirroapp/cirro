@@ -21,14 +21,26 @@ router.get('/categories', checkAdmin, async (req, res) => {
 });
 
 router.post('/categories/new', checkAdmin, async (req, res) => {
-    const { name, type } = req.body;
+    const { type } = req.body;
 
-    const categories = await db.all('categories');
+    const categories = await db.count('categories');
 
     if (type == 'category') {
+        const { name } = req.body;
+        const position = (categories || 0) + 1;
 
+        const data = {
+            name,
+            position
+        }
+
+        await db.set(position, data, 'categories');
+
+        return res.status(201).redirect('/admin/categories');
+    } else if (type == 'subcategory') {
+        const { name, description, category, position } = req.body;
     } else {
-        return 
+        return res.status(500).render('errors/500', { stack: `dumbass` });
     }
 });
 
