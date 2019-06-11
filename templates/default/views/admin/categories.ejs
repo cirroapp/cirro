@@ -4,6 +4,15 @@
 <body>
     <%- include('../partials/navbar.ejs'); %>
 
+    <script>
+        function validateCategory() {
+            if (!name.value) return toast(`No name was entered.`, 'danger');
+            if (name.value.length < 1) return toast(`The name must be at least 1 character.`, 'danger');
+            
+            if (!['category', 'subcategory'].includes(type.value)) return toast(`Type isn't valid, did you inspect element that?`, 'danger');
+        }
+    </script>
+
     <div class="header has-background-grey-lighter">
         <div class="container">
             <h1 class="title"><%= locals.title %></h1>
@@ -42,12 +51,13 @@
     <div class="modal modal-fx-slideTop" id="modal-createCategory">
         <div class="modal-background" onclick="closeModal('createCategory');"></div>
         <div class="modal-content">
-            <div class="box">
+            <div class="box" onsubmit="return validateCategory();">
                 <form method="POST" action="/admin/categories/new">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
                             <input class="input" type="text" name="name" id="name" autocomplete="off" />
+                            <input class="input" type="text" name="type" id="type" autocomplete="off" style="display: none !important;" value="category" />
                         </div>
                     </div>
 

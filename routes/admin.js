@@ -20,4 +20,16 @@ router.get('/categories', checkAdmin, async (req, res) => {
     return res.render('admin/categories', { categories });
 });
 
+router.post('/categories/new', checkAdmin, async (req, res) => {
+    const { name, type } = req.body;
+
+    const categories = await db.all('categories');
+
+    if (type == 'category') {
+
+    } else {
+        return 
+    }
+});
+
 module.exports = router;
