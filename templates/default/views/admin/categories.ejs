@@ -36,13 +36,45 @@
                     <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
                 <% } else { %>
                     <% categories.sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
+                        <div class="modal modal-fx-slideTop" id="modal-createSubCategory_<%= category.id %>">
+                            <div class="modal-background" onclick="closeModal('createSubCategory_<%= category.id %>');"></div>
+                            <div class="modal-content">
+                                <div class="box">
+                                    <form method="POST" id="createSubCategory_<%= category.id %>" onsubmit="return validateSubCategory()" action="/admin/categories/new">
+                                        <div class="field">
+                                            <label class="label">Name</label>
+                                            <div class="control">
+                                                <input class="input" type="text" name="title" id="title" autocomplete="off" />
+                                                <p class="help">Sub-category names are unique per-category, and must not already be used.</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="field">
+                                            <label class="label">Icon</label>
+                                            <div class="control">
+                                                <input class="input" type="text" name="icon" id="icon" autocomplete="off" />
+                                                <p class="help">Optionally provide a <a href="https://fontawesome.com/icons">Font Awesome</a> icon to display next to the name. <a href="https://github.com/cirroapp/cirro/wiki/Using-icons-in-categories-and-sub-categories">See here for information.</a></p>
+                                            </div>
+                                        </div>
+
+                                        <input class="input" type="text" name="type" id="type" autocomplete="off" style="display: none !important;" value="subcategory" />
+
+                                        <div class="control">
+                                            <button class="button is-info">Create</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <button class="modal-close is-large" aria-label="close" onclick="closeModal('createCategory');"></button>
+                        </div>
+
                         <article class="message is-info">
                             <div class="message-header">
-                                <p><% if (category.icon != null) { %><%- category.icon %><% } %> <%= category.name %></p>
+                                <p><% if (category.icon) { %><%- category.icon %><% } %> <%= category.name %></p>
                                 <div class="is-pulled-right">
                                     <% if (category.position < categories.length) { %><button class="button is-info" aria-label="up" onclick="post('/admin/categories/up', { id: `<%= category.position %>` });"><i class="fas fa-arrow-up"></i></button><% } %>
                                     <% if (category.position > 1) { %><button class="button is-info" aria-label="down" onclick="post('/admin/categories/down', { id: `<%= category.position %>` });"><i class="fas fa-arrow-down"></i></button><% } %>
-                                    <button class="button is-info" aria-label="new"><i class="fas fa-plus" onclick="openModal('createSubCategory__<%= category.id %>');"></i></button>
+                                    <button class="button is-info" aria-label="new"><i class="fas fa-plus" onclick="openModal('createSubCategory_<%= category.id %>');"></i></button>
                                     <button class="button is-info" aria-label="delete" onclick="post('/admin/categories/delete', { id: `<%= category.id %>` });"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
@@ -50,28 +82,6 @@
                                 <p>Sub-categories will appear here.</p>
                             </div>
                         </article>
-
-                        <div class="modal modal-fx-slideTop" id="modal-createSubCategory_<%= category.id %>">
-                            <div class="modal-background" onclick="closeModal('createSubCategory_<%= category.id %>');"></div>
-                            <div class="modal-content">
-                                <div class="box">
-                                    <form method="POST" onsubmit="return validateSubCategory()" action="/admin/categories/new">
-                                        <div class="field">
-                        <label class="label">Name</label>
-                        <div class="control">
-                            <input class="input" type="text" name="title" id="title" autocomplete="off" />
-                            <input class="input" type="text" name="type" id="type" autocomplete="off" style="display: none !important;" value="category" />
-                        </div>
-                    </div>
-
-                    <div class="control">
-                        <button class="button is-info">Create</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <button class="modal-close is-large" aria-label="close" onclick="closeModal('createCategory');"></button>
-    </div>
                     <% }); %>
                 <% } %>
             </div>
@@ -82,7 +92,7 @@
         <div class="modal-background" onclick="closeModal('createCategory');"></div>
         <div class="modal-content">
             <div class="box">
-                <form method="POST" onsubmit="return validateCategory()" action="/admin/categories/new">
+                <form method="POST" id="createCategory" onsubmit="return validateCategory()" action="/admin/categories/new">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
