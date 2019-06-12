@@ -12,3 +12,5 @@ exports.months = {
     10: 'November',
     11: 'December'
 }
+
+exports.scriptRegex = /(?:\<?\/?script\>|('|")?script?('|"))/g;

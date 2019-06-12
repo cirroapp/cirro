@@ -6,6 +6,7 @@
 
     <script>
         function validateCategory() {
+            console.log(title.value)
             if (!title.value) return toast(`No name was entered.`, 'danger');
             if (title.value.length < 1) return toast(`The name must be at least 1 character.`, 'danger');
             
@@ -37,7 +38,7 @@
                     <% categories.sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
                         <article class="message is-info">
                             <div class="message-header">
-                                <p><%= category.name %></p>
+                                <p><% if (category.icon != null) { %><%- category.icon %><% } %> <%= category.name %></p>
                                 <div class="is-pulled-right">
                                     <% if (category.position < categories.length) { %><button class="button is-info" aria-label="up" onclick="post('/admin/categories/up', { id: `<%= category.position %>` });"><i class="fas fa-arrow-up"></i></button><% } %>
                                     <% if (category.position > 1) { %><button class="button is-info" aria-label="down" onclick="post('/admin/categories/down', { id: `<%= category.position %>` });"><i class="fas fa-arrow-down"></i></button><% } %>
@@ -86,9 +87,19 @@
                         <label class="label">Name</label>
                         <div class="control">
                             <input class="input" type="text" name="title" id="title" autocomplete="off" />
-                            <input class="input" type="text" name="type" id="type" autocomplete="off" style="display: none !important;" value="category" />
+                            <p class="help">Category names are unique, and must not already be used.</p>
                         </div>
                     </div>
+
+                    <div class="field">
+                        <label class="label">Icon</label>
+                        <div class="control">
+                            <input class="input" type="text" name="icon" id="icon" autocomplete="off" />
+                            <p class="help">Optionally provide a <a href="https://fontawesome.com/icons">Font Awesome</a> icon to display next to the name. <a href="https://github.com/cirroapp/cirro/wiki/Using-icons-in-categories-and-sub-categories">See here for information.</a></p>
+                        </div>
+                    </div>
+
+                    <input class="input" type="text" name="type" id="type" autocomplete="off" style="display: none !important;" value="category" />
 
                     <div class="control">
                         <button class="button is-info">Create</button>

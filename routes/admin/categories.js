@@ -3,6 +3,8 @@ const router = express.Router();
 
 const randomstring = require('randomstring');
 
+const { scriptRegex } = require('../../src/constants');
+
 const checkAdmin = (req, res, next) => {
     if (!req.session.user) return res.status(501).redirect('/');
     if (!req.session.user.admin) return res.status(503).redirect('/');
@@ -22,13 +24,17 @@ router.post('/new', checkAdmin, async (req, res) => {
     const categories = await db.count('categories');
 
     if (type == 'category') {
-        const { title: name } = req.body;
+        const { title: name, icon } = req.body;
+
+        let match = icon.match(scriptRegex);
+        if (match) icon = icon.replace(scriptRegex, '');
 
         const position = (categories || 0) + 1;
         const id = randomstring.generate(12);
 
         const data = {
             name,
+            icon,
             position
         }
 
