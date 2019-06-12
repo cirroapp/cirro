@@ -11,7 +11,7 @@
             <% categories.sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
                 <article class="message is-info">
                     <div class="message-header">
-                        <p><%= category.name %></p>
+                        <p><% if (category.icon) { %><%- category.icon %><% } %> <%= category.name %></p>
                     </div>
                     <div class="message-body">
                         <p>Sub-categories will appear here.</p>
