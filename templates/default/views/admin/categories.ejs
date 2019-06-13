@@ -4,28 +4,7 @@
 <body>
     <%- include('../partials/navbar.ejs'); %>
 
-    <script>
-        function validateCategory() {
-            if (!title.value) return toast(`No name was entered.`, 'danger');
-            if (title.value.length < 1) return toast(`The name must be at least 1 character.`, 'danger');
-            
-            if (!['category', 'subcategory'].includes(type.value)) return toast(`Type isn't valid, did you inspect element that?`, 'danger');
-        }
-
-        function validateSubCategory(id) {
-            const _title = $(`#title_${id}`);
-            const _icon = $(`#icon_${id}`);
-
-            if (!_title.value) return toast(`No name was entered.`, 'danger');
-            if (_title.value.length < 1) return toast(`The name must be at least 1 character.`, 'danger');
-            
-            if (!['category', 'subcategory'].includes(type.value)) return toast(`Type isn't valid, did you inspect element that?`, 'danger');
-
-            // post
-            console.log(`success`);
-            return false;
-        }
-    </script>
+    <!-- how to use alerting: " return toast(`No name was entered.`, 'danger'); " -->
 
     <div class="header has-background-grey-lighter">
         <div class="container">
