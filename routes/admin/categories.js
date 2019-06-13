@@ -49,7 +49,6 @@ router.post('/new', checkAdmin, async (req, res) => {
 });
 
 router.post('/delete', checkAdmin, async (req, res) => {
-    console.log('delete')
     const { id } = req.body;
 
     const exists = await db.has(id, 'categories');
