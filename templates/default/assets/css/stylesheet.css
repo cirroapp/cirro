@@ -2,14 +2,19 @@ div.header {
     padding: 24px 0px;
 }
 
-img.avatar {
-    width: 64px;
+img.avatar, img.avatar2 {
+    width: auto;
     height: auto;
     border-radius: 3px;
     vertical-align: middle;
     margin-right: 18px;
 }
 
-.column.avatar {
-    width: 64px !important;
+.avatar {
+    max-width: 64px !important;
+}
+
+.avatar2 {
+    max-width: 64px !important;
+    margin-top: 7px !important;
 }

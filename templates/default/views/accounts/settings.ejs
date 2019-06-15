@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<%- include('../partials/head.ejs'); %>
+<body>
+    <%- include('../partials/navbar.ejs'); %>
+
+    <div class="header has-background-grey-lighter">
+        <div class="container">
+            <h1 class="title">@<%= user.username %></h1>
+            <p class="subtitle is-6">Manage your account settings</p>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="container">
+        <div class="columns">
+            <div class="column is-2">
+                <aside class="menu">
+                    <p class="menu-label">User Settings</p>
+                    <ul class="menu-list">
+                        <li><a href="#account">Account Details</a></li>
+                        <li><a href="#avatar">Avatar</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column">
+                <section class="box" id="account">
+                    <h1 class="title is-3">Account Details</h1>
+                </section>
+
+                <br />
+
+                <section class="box" id="avatar">
+                    <h1 class="title is-3">Avatar</h1>
+
+                    <div class="columns">
+                        <div class="column is-1">
+                            <img class="avatar2" src="<%= !user.avatar ? '/img/defaultAvatar.png' : user.avatar %>" alt="Avatar" />
+                        </div>
+                        <div class="column">
+                            <p>You can upload a new avatar below, then click save to set your avatar as the newly uploaded one. If you don't have one, or you click reset, your avatar will be set to the default placeholder avatar.</p>
+                            <form>
+                                <div class="field columns">
+                                    <div class="column is-10">
+                                        <input name="avatar" type="file" />
+                                    </div>
+                                    <div class="column is-2">
+                                        <div class="is-pulled-right">
+                                            <button type="submit" class="button is-info is-tiny">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <p>If you would like to use a Gravatar, set your Gravatar email and click save to set it.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/scripts.ejs'); %>
+</body>
+</html>

@@ -10,9 +10,18 @@ router.get('/@:username', async (req, res) => {
     const username = req.params.username;
 
     const user = await db.find(((d) => d.username == username), 'users');
-    if (!user) return;
+    if (!user) return res.status(404).render('errors/404', { route: req.originalUrl });
 
     return res.render('accounts/profile', { user, months });
+});
+
+router.get('/@:username/settings', async (req, res) => {
+    const username = req.params.username;
+
+    const user = await db.find(((d) => d.username == username), 'users');
+    if (!user) return;
+
+    return res.render('accounts/settings', { user });
 });
 
 router.route('/login')

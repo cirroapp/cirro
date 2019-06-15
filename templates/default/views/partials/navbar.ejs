@@ -18,12 +18,25 @@
 
             <div class="navbar-end">
                 <% if (!locals.user) { %>
-                <a class="navbar-item" href="/login">Login</a>
-                <a class="navbar-item" href="/register">Register</a>
+                    <a class="navbar-item" href="/login">Login</a>
+                    <a class="navbar-item" href="/register">Register</a>
                 <% } else { %>
-                <a class="navbar-item" href="/@<%= locals.user.username %>"><%= locals.user.username %></a>
-                <a class="navbar-item" href="/logout">Logout</a>
-                <% if (locals.user.admin) { %><a class="navbar-item" href="/admin"><i class="fas fa-cog"></i></a><% } %>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link"><%= locals.user.username %></a>
+                    
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="/@<%= locals.user.username %>">Profile</a>
+                            <a class="navbar-item">Private Messages</a>
+
+                            <hr class="navbar-divider">
+
+                            <a class="navbar-item" href="/@<%= locals.user.username %>/settings">Settings</a>
+                        </div>
+                    </div>
+                    <a class="navbar-item" href="/logout">Logout</a>
+                    <% if (locals.user.admin) { %>
+                        <a class="navbar-item has-text-link" href="/admin">Admin</a>
+                    <% } %>
                 <% } %>
             </div>
         </div>
