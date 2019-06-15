@@ -1,0 +1,78 @@
+<ul id="categories">
+    <% if (categories.length < 1) { %>
+        <p class="subtitle is-6 has-text-grey">No categories have been created. Click the <code>+</code> to add one!</p>
+    <% } else { %>
+        <% for (const category of categories.filter(c => !!!c.sub).sort((a, b) => b.position - a.position)) { %>
+            <li id="category-drag-drop" data-id="<%= category.id %>">
+                <article class="message">
+                    <article class="message is-info">
+                        <div class="message-header">
+                            <p><% if (category.icon) { %><%- category.icon %><% } %> <%= category.name %></p>
+                            <div class="buttons" data-category="<%= category.id %>">
+                                <a class="is-pulled-right" onclick="functions.openSubCreationModal(this)"><i class="fas fa-plus"></i></a>
+                                <a class="is-pulled-right" style="padding-left: 15px !important;" onclick="functions.deleteCategory(this)"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                        <div class="message-body">
+                            <% const subCats = categories.filter(c => !!c.sub && c.sub === true && c.parent === category.id) %>
+                            <ul id="sub-cat-drag-drop-<%= category.id %>">
+                                <% if (subCats.length < 1) { %>
+                                    <p>No subcategories created yet.</p>
+                                <% } else { %>
+                                    <% for (const c of subCats.sort((a, b) => b.position - a.position)) { %>
+                                        <li data-id="<%= c.id %>">
+                                            <i class="fas fa-arrows-alt"></i><% if (c.icon) { %><%- c.icon %><% } %> <%= c.name %>
+                                            <a class="is-pulled-right" style="padding-left: 15px !important;" onclick="functions.deleteSubCategory(this)"><i class="fas fa-trash-alt"></i></a>
+                                        </li>
+                                    <% } %>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </article>
+                </article>
+            </li>
+        <% } %>
+    <% } %>
+</ul>
+<script src="/js/Sortable.min.js"></script> 
+<script src="/js/jquery-sortable.js"></script>
+<script>
+    function watchInitial() {
+        let l = $("li#category-drag-drop").toArray();
+        $("ul#categories").sortable({
+            handle: "div.message-header",
+            onEnd(ev) {
+                const e = document.querySelector("article#changesDetected");
+                e.removeAttribute("style");
+                const d = e.querySelector("a#discard"), s = e.querySelector("a#save");
+                if (!d.onclick) {
+                    d.onclick = ev => {
+                        const c = document.querySelector("ul#categories");
+                        while (c.firstChild) c.removeChild(c.firstChild);
+                        for (let i = 0; i < l.length; i++) c.appendChild(l[i]);
+                        e.setAttribute("style", "display: none;");
+                    };
+                }
+                if (!s.onclick) {
+                    s.onclick = () => {
+                        functions.saveCategories();
+                    };
+                }
+            }
+        });
+    }
+    function watchSubcategories() {
+        $("li#category-drag-drop").toArray().forEach(c => {
+            const subs = $(`ul#sub-cat-drag-drop-${c.getAttribute("data-id")}`);
+            subs.sortable({
+                onEnd() {
+                    functions.saveSubCategories(subs.children().toArray());
+                }
+            })
+        });
+    }
+    watchInitial();
+    watchSubcategories();
+    setInterval(() => watchInitial(), 100);
+    setInterval(() => watchSubcategories(), 100);
+</script>

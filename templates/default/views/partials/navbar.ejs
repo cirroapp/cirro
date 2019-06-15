@@ -1,11 +1,31 @@
+<script>
+    (function () {
+        let active = false;
+        window.toggleNavbar = function () {
+            const menu = document.querySelector("div.navbar-menu");
+            const navBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if (!menu && navBurgers.length < 1) {
+                active = false;
+                return;
+            }
+            active = !active;
+            if (active) {
+                for (const navBurger of navBurgers) navBurger.classList.add("is-active");
+                menu.classList.add("is-active");
+            } else {
+                for (const navBurger of navBurgers) navBurger.classList.remove("is-active");
+                menu.classList.remove("is-active");
+            }
+        }
+    })();
+</script>
 <div class="container">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
                 <b><%= locals.title %></b>
             </a>
-
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <a role="button" class="navbar-burger" onclick="toggleNavbar()">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -15,7 +35,6 @@
             <div class="navbar-start">
                 <a class="navbar-item" href="/">Forums</a>
             </div>
-
             <div class="navbar-end">
                 <% if (!locals.user) { %>
                 <a class="navbar-item" href="/login">Login</a>
