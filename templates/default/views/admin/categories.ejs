@@ -3,9 +3,6 @@
 <%- include('../partials/head.ejs'); %>
 <body>
     <%- include('../partials/navbar.ejs'); %>
-
-    <!-- how to use alerting: " return toast(`No name was entered.`, 'danger'); " -->
-
     
     <!-- New category modal (hidden by default) -->
     <div class="modal" id="create-category">
@@ -302,26 +299,19 @@
                 </h1>
                 <p class="subtitle is-6">Manage the categories and sub-categories on your forum</p>
 
-                <article id="changesDetected" style="display: none;" class="message is-warning">
+                <article class="message is-danger" id="changesDetected" style="display: none;">
                     <div class="message-body">
-                        <p class="title is-4">Category changed detected!</p>
                         <p>
-                            It appears the categories positions changed, would you like to Save the changes, or Discard them?<br>
-                            <a class="is-success" id="save">Save</a> | <a class="is-danger" id="discard">Discard</a>
+                            It appears the categories positions changed, would you like to save the changes or discard them?<br />
+                            <a class="is-success" id="save">Save</a>  <a class="is-danger" id="discard">Discard</a>
                         </p>
                     </div>
                 </article>
-                <%- include("../partials/categories/render", { categories }) %>
+
+                <%- include('../partials/categories/render', { categories }); %>
             </div>
         </div>
     </div>
-
-    <style>
-        .category-drag-color {
-            background-color: black !important;
-            color: white !important;
-        }
-    </style>
 
     <%- include('../partials/scripts.ejs'); %>
 </body>

@@ -50,4 +50,9 @@ module.exports = class RethinkDB extends DatabaseProvider {
         return (!func || typeof func != 'function' || !table) ? false : (await this.db.table(table)).find(func);
     }
 
+    async bulkUpdate(data, table = null) {
+        return !table ? false : data.forEach(d => {
+            await this.db.table(table).get(d.id).update(d);
+        });
+    }
 }

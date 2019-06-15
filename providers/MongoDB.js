@@ -62,5 +62,4 @@ module.exports = class MongoDB extends DatabaseProvider {
             }
         })));
     }
-
 }

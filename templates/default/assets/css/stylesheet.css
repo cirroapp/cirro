@@ -18,3 +18,8 @@ img.avatar, img.avatar2 {
     max-width: 64px !important;
     margin-top: 7px !important;
 }
+
+.category-drag-color {
+    background-color: black !important;
+    color: white !important;
+}
