@@ -19,8 +19,6 @@
     "ejs": "^2.6.1",
     "express": "^4.17.1",
     "helmet": "^3.18.0",
-    "mongodb": "^3.2.7",
-    "randomstring": "^1.1.5",
-    "sortablejs": "^1.10.0-rc2"
+    "randomstring": "^1.1.5"
   }
 }
