@@ -8,13 +8,22 @@
         <% if (!categories.length) { %>
             <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
         <% } else { %>
-            <% categories.sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
+            <% categories.filter(c => !!!c.sub).sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
                 <article class="message is-info">
                     <div class="message-header">
                         <p><% if (category.icon) { %><%- category.icon %><% } %> <%= category.name %></p>
                     </div>
                     <div class="message-body">
-                        <p>Sub-categories will appear here.</p>
+                        <% const subCats = categories.filter(c => !!c.sub && c.sub === true && c.parent === category.id) %>
+                        <ul>
+                            <% if (subCats.length < 1) { %>
+                                <p>No subcategories created yet.</p>
+                            <% } else { %>
+                                <% for (const c of subCats.sort((a, b) => b.position - a.position)) { %>
+                                    <li><% if (c.icon) { %><%- c.icon %><% } %> <%= c.name %></li>
+                                <% } %>
+                            <% } %>
+                        </ul>
                     </div>
                 </article>
             <% }); %>

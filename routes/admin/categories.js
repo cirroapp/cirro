@@ -1,91 +1,103 @@
 const express = require('express');
 const router = express.Router();
-
-const randomstring = require('randomstring');
+const { template: t } = require(`${process.cwd()}/config.json`);
 
 const { scriptRegex } = require('../../src/constants');
+const rs = require("randomstring");
+
+const { compile } = require("ejs");
+const root = `${process.cwd()}/templates/${t}/views/partials`;
+const categoryTemplate = compile(require("fs").readFileSync(`${root}/categories/render.ejs`).toString("utf-8"), { root });
 
 const checkAdmin = (req, res, next) => {
     if (!req.session.user) return res.status(501).redirect('/');
     if (!req.session.user.admin) return res.status(503).redirect('/');
-
     next();
 }
 
 router.get('/', checkAdmin, async (req, res) => {
     const categories = await db.all('categories');
-
     return res.render('admin/categories', { categories });
 });
 
 router.post('/new', checkAdmin, async (req, res) => {
     const { type } = req.body;
-
-    const categories = await db.count('categories');
-
+    const categories = await db.all('categories');
     if (type == 'category') {
-        const { title: name, icon } = req.body;
-
-        let match = icon.match(scriptRegex);
-        if (match) icon = icon.replace(scriptRegex, '');
-
-        const position = (categories || 0) + 1;
-        const id = randomstring.generate(12);
-
+        const { name, icon } = req.body;
+        if (icon != null) {
+            let match = (icon || "").match(scriptRegex);
+            if (match) icon = icon.replace(scriptRegex, '');
+        }
+        const id = rs.generate(12);
         const data = {
             name,
             icon,
-            position
-        }
-
+            position: categories.filter(c => !c.hasOwnProperty("sub")).length + 1,
+        };
         await db.set(id, data, 'categories');
-
-        return res.status(201).redirect('/admin/categories');
+        categories.push({ id, ...data });
+        return res.status(201).json({ categories: categoryTemplate({ categories }) });
     } else if (type == 'subcategory') {
-        const { name, description, category, position } = req.body;
+        const { parent, name, icon, description } = req.body;
+        if (!parent) return res.status(400).json({ message: "Parent category required!" });
+        if (icon != null) {
+            let match = (icon || "").match(scriptRegex);
+            if (match) icon = icon.replace(scriptRegex, '');
+        }
+        const id = rs.generate(12);
+        const data = {
+            name,
+            parent,
+            icon,
+            position: categories.filter(c => c.hasOwnProperty("sub") && c.parent === parent).length + 1,
+            description,
+            sub: true
+        };
+        await db.set(id, data, "categories");
+        categories.push({ id, ...data });
+        return res.status(201).json({ id, name, cleanIcon: icon });
     } else {
         return res.status(500).render('errors/500', { stack: `dumbass` });
     }
 });
 
 router.post('/delete', checkAdmin, async (req, res) => {
-    const { id } = req.body;
-
-    const exists = await db.has(id, 'categories');
-
-    if (exists) {
-        await db.delete(id, 'categories');
-        return res.redirect('/admin/categories');
+    const { id, type } = req.body;
+    if (type === "category") {
+        const categories = await db.all("categories");
+        const mainCategory = categories.find(c => !!!c.sub && c.id === id);
+        if (mainCategory) {
+            await db.delete(id, "categories");
+            categories.splice(categories.indexOf(mainCategory), 1);
+            for (const sub of categories.filter(c => !!c.sub && c.sub === true && c.parent === id)) {
+                categories.splice(categories.indexOf(sub), 1);
+                await db.delete(sub.id, "categories");
+            }
+            return res.status(200).json({ categories: categoryTemplate({ categories }) });
+        } else {
+            return res.status(400).json({ categories: categoryTemplate({ categories }) });
+        }
+    } else if (type === "subcategory") {
+        const categories = await db.all("categories");
+        const sub = categories.find(c => !!c.sub && c.sub === true && c.id === id);
+        if (sub) {
+            await db.delete(id, "categories");
+            categories.splice(categories.indexOf(sub), 1);
+            return res.status(200).json({ categories: categoryTemplate({ categories }) });
+        } else {
+            return res.status(400).json({ categories: categoryTemplate({ categories }) });
+        }
+    } else {
+        return res.status(500).render('errors/500', { stack: "dumbass v2" });
     }
-    else return res.status(500).redirect('/admin/categories');
 });
 
-router.post('/up', checkAdmin, async (req, res) => {
-    const { id } = req.body;
-
-    const categories = await db.all('categories');
-
-    const updatedCategory = await categories.find(category => category.position === parseInt(id), 'categories');
-    const otherCategory = await categories.find(category => category.position === parseInt(id) + 1, 'categories');
-
-    await db.update(updatedCategory.id, { position: parseInt(id) + 1 }, 'categories');
-    await db.update(otherCategory.id, { position: parseInt(id) }, 'categories');
-
-    return res.redirect('/admin/categories');
-});
-
-router.post('/down', checkAdmin, async (req, res) => {
-    const { id } = req.body;
-
-    const categories = await db.all('categories');
-
-    const updatedCategory = await categories.find(category => category.position === parseInt(id), 'categories');
-    const otherCategory = await categories.find(category => category.position === parseInt(id) - 1, 'categories');
-
-    await db.update(updatedCategory.id, { position: parseInt(id) - 1 }, 'categories');
-    await db.update(otherCategory.id, { position: parseInt(id) }, 'categories');
-
-    return res.redirect('/admin/categories');
+router.post("/resort", checkAdmin, async (req, res) => {
+    const { ids } = req.body;
+    const c = ids.map((id, i) => ({ id, position: ids.length - i }));
+    await db.bulkUpdate(c, "categories");
+    return res.status(200).send();
 });
 
 module.exports = router;

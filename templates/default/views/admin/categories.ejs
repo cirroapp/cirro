@@ -6,6 +6,281 @@
 
     <!-- how to use alerting: " return toast(`No name was entered.`, 'danger'); " -->
 
+    
+    <!-- New category modal (hidden by default) -->
+    <div class="modal" id="create-category">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Create a category!</p>
+                </header>
+            </div>
+            <section class="modal-card-body">
+                <div class="field">
+                    <label class="label">Name<span style="color: red !important;">*</span></label>
+                    <div class="control">
+                        <input class="input" value="" id="name" type="text">
+                    </div>
+                    <p class="help">A name for your category (required).</p>
+                </div>
+                <div class="field">
+                    <label class="label">Icon</label>
+                    <div class="control">
+                        <input class="input" value="" type="text" id="icon">
+                    </div>
+                    <p class="help">An icon for your category.</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button id="cancel" class="button">Cancel</button>
+                <button class="button is-info" onclick="functions.addCategory()">Create</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- New sub-category modal (hidden by default) -->
+    <div class="modal" id="create-sub-category">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Create a sub-category!</p>
+                </header>
+            </div>
+            <section class="modal-card-body">
+                <div class="field">
+                    <label class="label">Name<span style="color: red !important;">*</span></label>
+                    <div class="control">
+                        <input class="input" id="name">
+                    </div>
+                    <p class="help">A name for your subcategory (required).</p>
+                </div>
+                <div class="field">
+                    <label class="label">Icon</label>
+                    <div class="control">
+                        <input class="input" id="icon">
+                    </div>
+                    <p class="help">An icon for your subcategory.</p>
+                </div>
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                        <input class="input" id="description">
+                    </div>
+                    <p class="help">An optional description for your subcategory.</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button id="cancel" class="button">Cancel</button>
+                <button class="button is-info" onclick="functions.addCategory(true, this)">Create</button>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const NO_SUB_CREATED = "No subcategories created yet.";
+        window.functions = (function () {
+            const modals = [...document.querySelectorAll("div.modal").values()];
+            let isCreating = false;
+            function _request(method = "GET", path = "", data = {}, headers = {}) {
+                return new Promise(resolve => {
+                    const r = new XMLHttpRequest();
+                    r.open(method.toUpperCase(), path, true);
+                    if (method === "POST" && !headers["Content-Type"]) {
+                        r.setRequestHeader("Content-Type", "application/json");
+                    }
+                    for (const [name, value] of Object.entries(headers || {})) {
+                        r.setRequestHeader(name, value);
+                    }
+                    r.send(method === "POST" && data ? JSON.stringify(data) : null);
+                    r.onreadystatechange = () => {
+                        if (r.readyState === 4) {
+                            r.ok = r.status >= 200 && r.status < 400;
+                            return resolve(r);
+                        }
+                    }
+                });
+            }
+            function addCategory(subcategory = false, _this) {
+                const name = document.querySelector(`div#create${subcategory?"-sub":""}-category`).querySelector("input#name");
+                if (!name || !name.value) {
+                    toast("A name must be provided!", "danger");
+                } else {
+                    if (isCreating) return;
+                    isCreating = !isCreating;
+                    if (!subcategory) {
+                        const icon = document.querySelector("div#create-category").querySelector("input#icon");
+                        _request("POST", "/admin/categories/new", {
+                            name: name.value,
+                            icon: icon ? icon.value : null, 
+                            type: "category"
+                        }).then(r => {
+                            if (r.ok) {
+                                const modal = document.querySelector("div#create-category");
+                                modal.className = 'modal';
+                                modal.querySelector("input#name").value = "";
+                                modal.querySelector("input#icon").value = "";
+                                document.querySelector("ul#categories").innerHTML = JSON.parse(r.responseText).categories;
+                                toast("Category created successfully!", "success");
+                                isCreating = false;
+                            } else {
+                                const modal = document.querySelector("div#create-category");
+                                modal.className = 'modal';
+                                modal.querySelector("input#name").value = "";
+                                modal.querySelector("input#icon").value = "";
+                                toast("Something failed when creating the category. Try again later!", "danger");
+                                isCreating = false;
+                            }
+                        });
+                    } else {
+                        const parent = _this.parentNode.parentNode.parentNode.getAttribute("data-category");
+                        const icon = document.querySelector("div#create-sub-category").querySelector("input#icon");
+                        const description = document.querySelector("div#create-sub-category").querySelector("input#description");
+                        _request("POST", "/admin/categories/new", {
+                            name: name.value,
+                            parent,
+                            icon: icon ? icon.value : null,
+                            description: description ? description.value : null,
+                            type: "subcategory"
+                        }).then(r => {
+                            if (r.ok) {
+                                const b = JSON.parse(r.responseText);
+                                const modal = document.querySelector("div#create-sub-category");
+                                modal.className = 'modal';
+                                modal.querySelector("input#name").value = "";
+                                modal.querySelector("input#icon").value = "";
+                                const p = document.querySelector(`ul#sub-cat-drag-drop-${parent}`);
+                                if (p.children[0].innerHTML === NO_SUB_CREATED) p.removeChild(p.children[0]);
+                                const li = document.createElement("li");
+                                li.setAttribute("data-id", b.id);
+                                li.innerHTML = `
+                                    <i class="fas fa-arrows-alt"></i>${icon && icon.value ? b.cleanIcon : ""} ${b.name}
+                                    <a class="is-pulled-right" style="padding-left: 15px !important;" onclick="functions.deleteSubCategory(this)"><i class="fas fa-trash-alt"></i></a>
+                                `.trim();
+                                p.appendChild(li);
+                                toast("Sub category created successfully!", "success");
+                                isCreating = false;
+                            } else {
+                                const modal = document.querySelector("div#create-sub-category");
+                                modal.className = 'modal';
+                                modal.querySelector("input#name").value = "";
+                                modal.querySelector("input#icon").value = "";
+                                modal.querySelector("input#description").value = "";
+                                toast("Something failed when creating the sub-category. Try again later!", "danger");
+                                isCreating = false;
+                            }
+                        });
+                    }
+                }
+            }
+            function openCreationModal() {
+                if (modals.filter(c => c.className.includes("is-active")).length >= 1) return;
+                const modal = document.querySelector("div[id='create-category']");
+                modal.className += ' is-active';
+                modal.querySelector('.modal-background').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    modal.className = 'modal';
+                    modal.querySelector("input#name").value = "";
+                    modal.querySelector("input#icon").value = "";
+                });
+                modal.querySelector("button#cancel").addEventListener("click", function (e) {
+                    e.preventDefault();
+                    modal.className = 'modal';
+                    modal.removeAttribute("data-category");
+                    modal.querySelector("input#name").value = "";
+                    modal.querySelector("input#icon").value = "";
+                });
+            }
+            function openSubCreationModal(_this) {
+                if (modals.filter(c => c.className.includes("is-active")).length >= 1) return;
+                const modal = document.querySelector("div[id='create-sub-category']");
+                modal.setAttribute("data-category", _this.parentNode.getAttribute("data-category"));
+                modal.className += ' is-active';
+                modal.querySelector('.modal-background').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    modal.className = 'modal';
+                    modal.removeAttribute("data-category");
+                    modal.querySelector("input#name").value = "";
+                    modal.querySelector("input#icon").value = "";
+                    modal.querySelector("input#description").value = "";
+                });
+                modal.querySelector("button#cancel").addEventListener("click", function (e) {
+                    e.preventDefault();
+                    modal.className = 'modal';
+                    modal.removeAttribute("data-category");
+                    modal.querySelector("input#name").value = "";
+                    modal.querySelector("input#icon").value = "";
+                    modal.querySelector("input#description").value = "";
+                });
+            }
+            let isDeleting = false;
+            function deleteCategory(_this) {
+                if (isDeleting) return;
+                isDeleting = !isDeleting;
+                const id = _this.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id");
+                _request("POST", "/admin/categories/delete", { id, type: "category" }).then(r => {
+                    if (r.ok) {
+                        isDeleting = false;
+                        document.querySelector("ul#categories").innerHTML = JSON.parse(r.responseText).categories;
+                        toast("Category deleted!", "success");
+                    } else if (r.status === 400) {
+                        isDeleting = false;
+                        document.querySelector("ul#categories").innerHTML = JSON.parse(r.responseText).categories;
+                    }
+                });
+            }
+            let isDeletingSub = false;
+            function deleteSubCategory(_this) {
+                if (isDeletingSub) return;
+                isDeletingSub = !isDeletingSub;
+                _request("POST", "/admin/categories/delete", {
+                    id: _this.parentNode.getAttribute("data-id"),
+                    type: "subcategory"
+                }).then(r => {
+                    if (r.ok) {
+                        isDeletingSub = false;
+                        document.querySelector("ul#categories").innerHTML = JSON.parse(r.responseText).categories;
+                        toast("Sub category deleted!", "success");
+                    } else if (r.status === 400) {
+                        isDeletingSub = false;
+                        document.querySelector("ul#categories").innerHTML = JSON.parse(r.responseText).categories;
+                    }
+                });
+            }
+            let isSaving = false, isSavingSub = false;
+            function saveCategories() {
+                if (isSaving || isSavingSub) return;
+                isSaving = !isSaving;
+                _request("POST", "/admin/categories/resort", {
+                    ids: $("li#category-drag-drop").toArray().map(e => e.getAttribute("data-id"))
+                }).then(r => {
+                    isSaving = false;
+                    toast("Category positions updated successfully!", "success");
+                    document.querySelector("article#changesDetected").setAttribute("style", "display: none;");
+                })
+            }
+            function saveSubCategories(subCats) {
+                if (isSaving || isSavingSub) return;
+                isSavingSub = true;
+                _request("POST", "/admin/categories/resort", {
+                    ids: subCats.map(e => e.getAttribute("data-id"))
+                }).then(() => {
+                    isSavingSub = false;
+                });
+            }
+            return {
+                addCategory: addCategory.bind(this),
+                openCreationModal: openCreationModal.bind(this),
+                openSubCreationModal: openSubCreationModal.bind(this),
+                deleteCategory: deleteCategory.bind(this),
+                deleteSubCategory: deleteSubCategory.bind(this),
+                saveCategories: saveCategories.bind(this),
+                saveSubCategories: saveSubCategories.bind(this)
+            };
+        })(); // Prevent mutation to the internal functions
+    </script>
+
     <div class="header has-background-grey-lighter">
         <div class="container">
             <h1 class="title"><%= locals.title %></h1>
@@ -23,24 +298,30 @@
             <div class="column">
                 <h1 class="title">
                     Categories
-
-                    <!-- creation button -->
-                    <a class="button is-info is-pulled-right" onclick=""><i class="fas fa-plus"></i></a>
+                    <a class="button is-info is-pulled-right" onclick="functions.openCreationModal()"><i class="fas fa-plus"></i></a>
                 </h1>
                 <p class="subtitle is-6">Manage the categories and sub-categories on your forum</p>
 
-                <% if (!categories.length) { %>
-                    <p class="subtitle is-6 has-text-grey">No categories have been created.</p>
-                <% } else { %>
-                    <% categories.sort((a, b) => parseInt(b.position) - parseInt(a.position)).forEach(category => { %>
-                        
-                    //<!-- categories appear here, sorted highest to lowest -->
-
-                    <% }); %>
-                <% }; %>
+                <article id="changesDetected" style="display: none;" class="message is-warning">
+                    <div class="message-body">
+                        <p class="title is-4">Category changed detected!</p>
+                        <p>
+                            It appears the categories positions changed, would you like to Save the changes, or Discard them?<br>
+                            <a class="is-success" id="save">Save</a> | <a class="is-danger" id="discard">Discard</a>
+                        </p>
+                    </div>
+                </article>
+                <%- include("../partials/categories/render", { categories }) %>
             </div>
         </div>
     </div>
+
+    <style>
+        .category-drag-color {
+            background-color: black !important;
+            color: white !important;
+        }
+    </style>
 
     <%- include('../partials/scripts.ejs'); %>
 </body>
