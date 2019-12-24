@@ -8,6 +8,16 @@ module.exports = (app) => {
         next();
     });
 
+    app.use((req, res, next) => {
+        const [initialSetup] = require('_initial.json');
+
+        if (initialSetup) {
+            res.redirect('/setup')
+        }
+
+        else next();
+    });
+
     app.use('/', require('./routes/index'));
     app.use('/', require('./routes/accounts'));
     
