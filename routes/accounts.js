@@ -72,7 +72,7 @@ router.route('/register')
         password: hashedPassword,
         createdAt: Date.now(),
         avatar: null,
-        admin: existingUsers === 0
+        admin: false
     };
 
     await db.set(id, data, 'users');
